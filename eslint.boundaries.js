@@ -19,10 +19,6 @@ export const eslintBoundariesConfig = {
       {
         type: 'features',
         pattern: './src/features/*'
-      },
-      {
-        type: 'shared',
-        pattern: './src/shared/*'
       }
     ]
   },
