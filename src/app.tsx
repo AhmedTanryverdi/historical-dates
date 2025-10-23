@@ -8,12 +8,11 @@ const Window = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: green;
 `;
 
 const Container = styled.div`
   max-width: 1440px;
-  widht: 100%;
+  width: 100%;
 `;
 const App = (): React.JSX.Element => {
   return (
