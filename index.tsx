@@ -11,5 +11,5 @@ try {
 
   root.render(<App />);
 } catch (error) {
-  alert(error);
+  console.log(error);
 }
