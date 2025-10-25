@@ -29,6 +29,24 @@ const Button = styled.button`
   transform-origin: 0% 50%;
   background-color: #000;
   border-radius: 50%;
+  transition: 0.3s;
+  span {
+    opacity: 0;
+    font-size: 20px;
+    color: #303e58;
+  }
+  &:hover {
+    width: 56px;
+    height: 56px;
+    top: calc(50% - 28px);
+    left: calc(50% - 28px);
+    background-color: transparent;
+    border: 1px solid #303e58;
+    transition: 0.3s;
+    span {
+      opacity: 1;
+    }
+  }
 `;
 
 const Scene = (): React.JSX.Element => {
@@ -41,7 +59,9 @@ const Scene = (): React.JSX.Element => {
             style={{
               transform: `rotate(${i * 60}deg) translate(${265}px) rotate(${-i * 60}deg)`
             }}
-          />
+          >
+            <span>{i + 1}</span>
+          </Button>
         ))}
       </Wheel>
     </SceneContainer>
