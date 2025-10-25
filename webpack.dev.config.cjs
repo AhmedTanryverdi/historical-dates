@@ -31,6 +31,10 @@ module.exports = {
         use: ['style-loader', { loader: 'css-loader', options: { modules: true } }, 'sass-loader']
       },
       {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader']
+      },
+      {
         test: /\.s(a|c)ss$/i,
         exclude: /\.module\.s(a|c)ss$/i,
         use: ['style-loader', 'css-loader', 'sass-loader']
