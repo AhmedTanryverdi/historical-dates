@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import Scene from './scene';
 import Slider from './slider';
@@ -21,11 +21,12 @@ const Title = styled.h1`
 `;
 
 const Main = (): React.JSX.Element => {
+  const useRefWheel = useRef<HTMLDivElement>(null);
   return (
     <MainContainer>
       <Title>Исторические даты</Title>
-      <Scene />
-      <Slider />
+      <Scene useRefWheel={useRefWheel} />
+      <Slider useRefWheel={useRefWheel} />
     </MainContainer>
   );
 };
