@@ -1,4 +1,7 @@
-import React from 'react';
+import { ContextState } from '@/features/context';
+import { controller } from '@/features/controller';
+import { ContextType, SceneProps } from '@/shared/types';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 const CounterContainer = styled.div`
@@ -24,13 +27,42 @@ const Button = styled.button`
 `;
 
 const CurrentSlider = styled.div``;
-const Switch = (): React.JSX.Element => {
+
+const Switch = ({ useRefWheel }: SceneProps): React.JSX.Element => {
+  const { currentData, setCurrentData, setDirection } = useContext<ContextType | null>(
+    ContextState
+  ) as ContextType;
+
   return (
     <CounterContainer>
-      <CurrentSlider>06/06</CurrentSlider>
+      <CurrentSlider>0{currentData}/06</CurrentSlider>
       <SwitchBtnsBlock>
-        <Button>{'<'}</Button>
-        <Button>{'>'}</Button>
+        <Button
+          onClick={() => {
+            if (currentData > 1 && currentData <= 6) {
+              setCurrentData(currentData - 1);
+              if (useRefWheel.current) {
+                setDirection('left');
+                controller(useRefWheel.current, 'left');
+              }
+            }
+          }}
+        >
+          {'<'}
+        </Button>
+        <Button
+          onClick={() => {
+            if (currentData >= 1 && currentData < 6) {
+              setCurrentData(currentData + 1);
+              if (useRefWheel.current) {
+                setDirection('right');
+                controller(useRefWheel.current, 'rigth');
+              }
+            }
+          }}
+        >
+          {'>'}
+        </Button>
       </SwitchBtnsBlock>
     </CounterContainer>
   );

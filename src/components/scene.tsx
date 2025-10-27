@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useContext, useRef } from 'react';
+import gsap from 'gsap';
+import { ContextState } from '@/features/context';
+import { controller } from '@/features/controller';
 import styled from 'styled-components';
+import { ContextType, SceneProps } from '@/shared/types';
 
 const SceneContainer = styled.section`
   max-width: 536px;
@@ -21,12 +25,12 @@ const Wheel = styled.div`
 `;
 
 const Button = styled.button`
-  width: 6px;
-  height: 6px;
+  width: 12px;
+  height: 12px;
   position: absolute;
-  top: calc(50% - 3px);
-  left: calc(50% - 3px);
-  transform-origin: 0% 50%;
+  top: calc(50% - 6px);
+  left: calc(50% - 6px);
+  transform-origin: 50% 50%;
   background-color: #000;
   border-radius: 50%;
   transition: 0.3s;
@@ -35,7 +39,8 @@ const Button = styled.button`
     font-size: 20px;
     color: #303e58;
   }
-  &:hover {
+  &:hover,
+  &.active {
     width: 56px;
     height: 56px;
     top: calc(50% - 28px);
@@ -49,20 +54,50 @@ const Button = styled.button`
   }
 `;
 
-const Scene = (): React.JSX.Element => {
+const Scene = ({ useRefWheel }: SceneProps): React.JSX.Element => {
+  const { currentData, setCurrentData, direction, setDirection } = useContext<ContextType | null>(
+    ContextState
+  ) as ContextType;
+
+  const buttonRefs = [
+    useRef<HTMLButtonElement>(null),
+    useRef<HTMLButtonElement>(null),
+    useRef<HTMLButtonElement>(null),
+    useRef<HTMLButtonElement>(null),
+    useRef<HTMLButtonElement>(null),
+    useRef<HTMLButtonElement>(null)
+  ];
   return (
     <SceneContainer>
-      <Wheel>
-        {Array.from({ length: 6 }, (_, i) => i).map((i: number) => (
-          <Button
-            key={i}
-            style={{
-              transform: `rotate(${i * 60}deg) translate(${265}px) rotate(${-i * 60}deg)`
-            }}
-          >
-            <span>{i + 1}</span>
-          </Button>
-        ))}
+      <Wheel ref={useRefWheel}>
+        {Array.from({ length: 6 }, (_, i) => i).map((i: number) => {
+          if (buttonRefs[i].current) {
+            const r = () =>
+              direction === 'left'
+                ? gsap.to(buttonRefs[i].current, { rotation: '-=60', duration: 0 })
+                : gsap.to(buttonRefs[i].current, { rotation: '+=60', duration: 0 });
+            r();
+          }
+          return (
+            <Button
+              key={i}
+              ref={buttonRefs[i]}
+              className={i + 1 === currentData ? 'active' : ''}
+              style={{
+                transform: `rotate(${i * 60}deg) translate(${265}px) rotate(${-i * 60}deg)`
+              }}
+              onClick={() => {
+                setCurrentData(i + 1);
+                if (useRefWheel.current) {
+                  setDirection('left');
+                  controller(useRefWheel.current, 'left');
+                }
+              }}
+            >
+              <span>{i + 1}</span>
+            </Button>
+          );
+        })}
       </Wheel>
     </SceneContainer>
   );

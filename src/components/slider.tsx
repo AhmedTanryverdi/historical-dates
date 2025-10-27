@@ -1,13 +1,14 @@
-import React from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import React, { useRef } from 'react';
+import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
 import styled from 'styled-components';
 import Switch from './switch';
 import Timecard from './timecard';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+import { SceneProps } from '@/shared/types';
 
-const cards = [
+const CARDS = [
   {
     year: 2015,
     description:
@@ -101,13 +102,14 @@ const params = {
   spaceBetween: 80
 };
 
-const Slider = (): React.JSX.Element => {
+const Slider = ({ useRefWheel }: SceneProps): React.JSX.Element => {
+  const swiperRef = useRef<SwiperRef | null>(null);
   return (
     <SliderContainer>
-      <Switch />
-      <SliderSwiper {...params}>
+      <Switch useRefWheel={useRefWheel} />
+      <SliderSwiper {...params} ref={swiperRef}>
         <SliderContent>
-          {cards.map((card, index) => {
+          {CARDS.map((card, index) => {
             return (
               <SwiperSlide key={index}>
                 <Timecard year={card.year} description={card.description} />
@@ -116,7 +118,15 @@ const Slider = (): React.JSX.Element => {
           })}
         </SliderContent>
       </SliderSwiper>
-      <Button>{'>'}</Button>
+      <Button
+        onClick={() => {
+          if (swiperRef.current && swiperRef.current.swiper) {
+            swiperRef.current.swiper.slideNext();
+          }
+        }}
+      >
+        {'>'}
+      </Button>
     </SliderContainer>
   );
 };
