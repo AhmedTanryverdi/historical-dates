@@ -1,12 +1,12 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Swiper, SwiperSlide, SwiperRef } from 'swiper/react';
+import { SceneProps } from '@/shared/types';
 import styled from 'styled-components';
 import Switch from './switch';
 import Timecard from './timecard';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { SceneProps } from '@/shared/types';
 
 const CARDS = [
   {
@@ -78,8 +78,14 @@ const Button = styled.button`
   border-radius: 50%;
   position: absolute;
   top: calc(50% - 20px);
-  right: -20px;
   box-shadow: 0 0 2px 0px black;
+
+  &.rightbtn {
+    right: -20px;
+  }
+  &.leftbtn {
+    left: -40px;
+  }
 `;
 
 const params = {
@@ -104,10 +110,31 @@ const params = {
 
 const Slider = ({ useRefWheel }: SceneProps): React.JSX.Element => {
   const swiperRef = useRef<SwiperRef | null>(null);
+  const [currentSlide, setCurrentSlide] = useState<number>(1);
+  const handleSlideChange = () => {
+    if (!swiperRef.current || !swiperRef.current.swiper) return;
+    const activeIndex = swiperRef.current.swiper.activeIndex;
+    setCurrentSlide(activeIndex + 1);
+  };
+
   return (
     <SliderContainer>
       <Switch useRefWheel={useRefWheel} />
-      <SliderSwiper {...params} ref={swiperRef}>
+      {currentSlide > 1 && (
+        <Button
+          className="leftbtn"
+          onClick={() => {
+            if (swiperRef.current && swiperRef.current.swiper) {
+              swiperRef.current.swiper.slidePrev();
+              setCurrentSlide((param) => param - 1);
+            }
+          }}
+        >
+          {'<'}
+        </Button>
+      )}
+
+      <SliderSwiper {...params} ref={swiperRef} onSlideChange={handleSlideChange}>
         <SliderContent>
           {CARDS.map((card, index) => {
             return (
@@ -119,9 +146,11 @@ const Slider = ({ useRefWheel }: SceneProps): React.JSX.Element => {
         </SliderContent>
       </SliderSwiper>
       <Button
+        className="rightbtn"
         onClick={() => {
           if (swiperRef.current && swiperRef.current.swiper) {
             swiperRef.current.swiper.slideNext();
+            setCurrentSlide((param) => param + 1);
           }
         }}
       >
