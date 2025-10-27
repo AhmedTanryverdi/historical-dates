@@ -1,4 +1,5 @@
 import { createRoot } from 'react-dom/client';
+import { ContextProvider } from './src/features/context';
 import App from './src/app';
 import './index.scss';
 
@@ -9,7 +10,11 @@ try {
   }
   const root = createRoot(rootElement);
 
-  root.render(<App />);
+  root.render(
+    <ContextProvider>
+      <App />
+    </ContextProvider>
+  );
 } catch (error) {
   console.log(error);
 }
