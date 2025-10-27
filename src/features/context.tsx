@@ -1,11 +1,5 @@
+import { ContextType } from '@/shared/types';
 import { createContext, ReactNode, useState } from 'react';
-
-type ContextType = {
-  currentData: number;
-  setCurrentData: (param: number) => void;
-  direction: string;
-  setDirection: (param: string) => void;
-};
 
 export const ContextState = createContext<ContextType | null>(null);
 
